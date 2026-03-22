@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>🚀 Cloud Log Monitoring Dashboard</title>
+
+    <meta http-equiv="refresh" content="3"> <!-- Auto refresh -->
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- jQuery for AJAX -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to right, #e0f7fa, #fff9c4);
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        h2 {
+            color: #007bff;
+            margin: 20px 0;
+            text-shadow: 1px 1px 2px #aaa;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        input, select, button {
+            padding: 8px 12px;
+            margin: 0 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        table {
+            margin: auto;
+            border-collapse: collapse;
+            width: 85%;
+            background: white;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.2s;
+        }
+
+        table:hover {
+            transform: scale(1.01);
+        }
+
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #007bff;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        tr.INFO { background-color: #d0f0c0; }
+        tr.WARNING { background-color: #fff3cd; }
+        tr.ERROR { background-color: #ffb3b3; }
+
+        tr:hover {
+            background-color: #ffe082 !important;
+            transform: scale(1.02);
+            transition: 0.2s;
+        }
+
+        #chart-container {
+            width: 70%;
+            margin: 40px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        }
+
+        canvas {
+            max-width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+
+<h2>🚀 Cloud Log Monitoring Dashboard</h2>
+
+<!-- SEARCH + FILTER -->
+<form method="get" action="/dashboard">
+    <input type="text" name="keyword" placeholder="Search logs..." th:value="${keyword}" />
+    <select name="severity">
+        <option value="" th:selected="${severity == null}">All Severities</option>
+        <option value="INFO" th:selected="${severity == 'INFO'}">INFO</option>
+        <option value="WARNING" th:selected="${severity == 'WARNING'}">WARNING</option>
+        <option value="ERROR" th:selected="${severity == 'ERROR'}">ERROR</option>
+    </select>
+    <button type="submit">Filter</button>
+</form>
+
+<!-- LOG TABLE -->
+<table>
+    <thead>
+    <tr>
+        <th>Time</th>
+        <th>Source</th>
+        <th>Message</th>
+        <th>Severity</th>
+    </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<!-- CHART -->
+<div id="chart-container">
+    <canvas id="severityChart"></canvas>
+</div>
+
+<script th:inline="javascript">
+    let severityChart;
+
+    function fetchLogs() {
+        $.get("/logs", function(data) {
+            // Update table
+            let tableRows = '';
+            data.forEach(log => {
+                tableRows += `<tr class="${log.severity}">
+                                <td>${log.timestamp}</td>
+                                <td>${log.source}</td>
+                                <td>${log.message}</td>
+                                <td>${log.severity}</td>
+                              </tr>`;
+            });
+            $("table tbody").html(tableRows);
+
+            // Update chart
+            const infoCount = data.filter(l => l.severity == 'INFO').length;
+            const warningCount = data.filter(l => l.severity == 'WARNING').length;
+            const errorCount = data.filter(l => l.severity == 'ERROR').length;
+
+            if (!severityChart) {
+                const ctx = document.getElementById('severityChart').getContext('2d');
+                severityChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['INFO', 'WARNING', 'ERROR'],
+                        datasets: [{
+                            label: 'Number of Logs',
+                            data: [infoCount, warningCount, errorCount],
+                            backgroundColor: ['#28a745', '#ffc107', '#dc3545'],
+                            borderRadius: 6,
+                            borderSkipped: false
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        animation: {
+                            duration: 1000,
+                            easing: 'easeOutBounce'
+                        },
+                        plugins: {
+                            legend: { display: false },
+                            title: { display: true, text: 'Log Severity Counts', font: { size: 18 } }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: { stepSize: 1 }
+                            }
+                        }
+                    }
+                });
+            } else {
+                severityChart.data.datasets[0].data = [infoCount, warningCount, errorCount];
+                severityChart.update();
+            }
+        });
+    }
+
+    setInterval(fetchLogs, 2000);
+    fetchLogs(); // initial fetch
+</script>
+
+</body>
+</html>
+
