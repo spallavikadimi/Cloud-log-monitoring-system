@@ -2,88 +2,112 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <title>🚀 Cloud Log Monitoring Dashboard</title>
-
-    <meta http-equiv="refresh" content="3"> <!-- Auto refresh -->
+    <title>SplunkLite - Real-Time Log Monitoring</title>
 
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- jQuery for AJAX -->
+    <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(to right, #e0f7fa, #fff9c4);
-            text-align: center;
+            font-family: 'Segoe UI', sans-serif;
             margin: 0;
-            padding: 0;
+            background: linear-gradient(to right, #e3f2fd, #fce4ec);
+            transition: 0.3s;
         }
 
-        h2 {
+        body.dark {
+            background: #121212;
+            color: white;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px 40px;
+            align-items: center;
+        }
+
+        h1 {
+            margin: 0;
             color: #007bff;
-            margin: 20px 0;
-            text-shadow: 1px 1px 2px #aaa;
+        }
+
+        body.dark h1 {
+            color: #90caf9;
+        }
+
+        .mode-btn {
+            padding: 8px 15px;
+            border: none;
+            background: #333;
+            color: white;
+            border-radius: 20px;
+            cursor: pointer;
         }
 
         form {
+            text-align: center;
             margin-bottom: 20px;
         }
 
-        input, select, button {
-            padding: 8px 12px;
-            margin: 0 5px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-            font-size: 14px;
+        input, select {
+            padding: 10px;
+            border-radius: 25px;
+            border: none;
+            margin: 5px;
+            outline: none;
+            width: 200px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
         }
 
-        button {
-            background-color: #007bff;
+        button.filter-btn {
+            padding: 10px 20px;
+            border-radius: 25px;
+            border: none;
+            background: #007bff;
             color: white;
             cursor: pointer;
             transition: 0.3s;
         }
 
-        button:hover {
-            background-color: #0056b3;
+        button.filter-btn:hover {
+            background: #0056b3;
         }
 
         table {
-            margin: auto;
-            border-collapse: collapse;
             width: 85%;
-            background: white;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            border-radius: 8px;
-            overflow: hidden;
-            transition: transform 0.2s;
-        }
-
-        table:hover {
-            transform: scale(1.01);
-        }
-
-        th, td {
-            padding: 12px;
-            border-bottom: 1px solid #ddd;
+            margin: auto;
+            border-collapse: separate;
+            border-spacing: 0 10px;
         }
 
         th {
-            background-color: #007bff;
+            background: #007bff;
             color: white;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
+            padding: 12px;
         }
 
-        tr.INFO { background-color: #d0f0c0; }
-        tr.WARNING { background-color: #fff3cd; }
-        tr.ERROR { background-color: #ffb3b3; }
+        tbody tr {
+            background: linear-gradient(135deg, #e3f2fd, #fce4ec);
+            transition: 0.3s;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
 
-        tr:hover {
-            background-color: #ffe082 !important;
-            transform: scale(1.02);
-            transition: 0.2s;
+        tbody tr:hover {
+            background: linear-gradient(135deg, #bbdefb, #f8bbd0);
+            transform: scale(1.01);
+        }
+
+        td {
+            padding: 12px;
+            user-select: text; /* allows copy */
+        }
+
+        body.dark tbody tr {
+            background: #1e1e1e;
         }
 
         #chart-container {
@@ -91,33 +115,58 @@
             margin: 40px auto;
             background: white;
             padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            border-radius: 10px;
         }
 
-        canvas {
-            max-width: 100%;
+        body.dark #chart-container {
+            background: #1e1e1e;
         }
+
+        footer {
+            text-align: center;
+            padding: 15px;
+            font-size: 14px;
+            opacity: 0.7;
+        }
+
+        .no-data {
+            text-align: center;
+            font-size: 18px;
+            color: gray;
+            animation: fade 1s infinite alternate;
+        }
+
+        @keyframes fade {
+            from { opacity: 0.5; }
+            to { opacity: 1; }
+        }
+
     </style>
 </head>
 
 <body>
 
-<h2>🚀 Cloud Log Monitoring Dashboard</h2>
+<header>
+    <div>
+        <h1>SplunkLite</h1>
+        <p>Real-Time Log Monitoring Made Simple</p>
+    </div>
+    <button class="mode-btn" onclick="toggleMode()">Mode</button>
+</header>
 
-<!-- SEARCH + FILTER -->
-<form method="get" action="/dashboard">
-    <input type="text" name="keyword" placeholder="Search logs..." th:value="${keyword}" />
-    <select name="severity">
-        <option value="" th:selected="${severity == null}">All Severities</option>
-        <option value="INFO" th:selected="${severity == 'INFO'}">INFO</option>
-        <option value="WARNING" th:selected="${severity == 'WARNING'}">WARNING</option>
-        <option value="ERROR" th:selected="${severity == 'ERROR'}">ERROR</option>
+<!-- FILTER -->
+<form onsubmit="return false;">
+    <input type="text" id="search" placeholder="Search logs...">
+    <select id="severity">
+        <option value="">All</option>
+        <option value="INFO">INFO</option>
+        <option value="WARNING">WARNING</option>
+        <option value="ERROR">ERROR</option>
     </select>
-    <button type="submit">Filter</button>
+    <button class="filter-btn" onclick="fetchLogs()">Filter</button>
 </form>
 
-<!-- LOG TABLE -->
+<!-- TABLE -->
 <table>
     <thead>
     <tr>
@@ -127,79 +176,79 @@
         <th>Severity</th>
     </tr>
     </thead>
-    <tbody></tbody>
+    <tbody id="logTable"></tbody>
 </table>
 
 <!-- CHART -->
 <div id="chart-container">
-    <canvas id="severityChart"></canvas>
+    <canvas id="chart"></canvas>
 </div>
 
-<script th:inline="javascript">
-    let severityChart;
+<footer>
+    © 2026 Log Monitoring System
+</footer>
+
+<script>
+    let chart;
 
     function fetchLogs() {
+        let keyword = $("#search").val().toLowerCase();
+        let severity = $("#severity").val();
+
         $.get("/logs", function(data) {
-            // Update table
-            let tableRows = '';
-            data.forEach(log => {
-                tableRows += `<tr class="${log.severity}">
-                                <td>${log.timestamp}</td>
-                                <td>${log.source}</td>
-                                <td>${log.message}</td>
-                                <td>${log.severity}</td>
-                              </tr>`;
-            });
-            $("table tbody").html(tableRows);
 
-            // Update chart
-            const infoCount = data.filter(l => l.severity == 'INFO').length;
-            const warningCount = data.filter(l => l.severity == 'WARNING').length;
-            const errorCount = data.filter(l => l.severity == 'ERROR').length;
+            let filtered = data.filter(log =>
+                (!keyword || log.message.toLowerCase().includes(keyword)) &&
+                (!severity || log.severity === severity)
+            );
 
-            if (!severityChart) {
-                const ctx = document.getElementById('severityChart').getContext('2d');
-                severityChart = new Chart(ctx, {
-                    type: 'bar',
+            let rows = "";
+
+            if(filtered.length === 0){
+                rows = `<tr><td colspan="4" class="no-data">No logs found 😔</td></tr>`;
+            } else {
+                filtered.forEach(log => {
+                    rows += `
+                        <tr>
+                            <td>${log.timestamp}</td>
+                            <td>${log.source}</td>
+                            <td>${log.message}</td>
+                            <td>${log.severity}</td>
+                        </tr>`;
+                });
+            }
+
+            $("#logTable").html(rows);
+
+            let info = filtered.filter(l => l.severity === "INFO").length;
+            let warn = filtered.filter(l => l.severity === "WARNING").length;
+            let error = filtered.filter(l => l.severity === "ERROR").length;
+
+            if(!chart){
+                chart = new Chart(document.getElementById("chart"), {
+                    type: "bar",
                     data: {
-                        labels: ['INFO', 'WARNING', 'ERROR'],
+                        labels: ["INFO","WARNING","ERROR"],
                         datasets: [{
-                            label: 'Number of Logs',
-                            data: [infoCount, warningCount, errorCount],
-                            backgroundColor: ['#28a745', '#ffc107', '#dc3545'],
-                            borderRadius: 6,
-                            borderSkipped: false
+                            data: [info, warn, error],
+                            backgroundColor: ["#4caf50","#ff9800","#f44336"]
                         }]
-                    },
-                    options: {
-                        responsive: true,
-                        animation: {
-                            duration: 1000,
-                            easing: 'easeOutBounce'
-                        },
-                        plugins: {
-                            legend: { display: false },
-                            title: { display: true, text: 'Log Severity Counts', font: { size: 18 } }
-                        },
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                ticks: { stepSize: 1 }
-                            }
-                        }
                     }
                 });
             } else {
-                severityChart.data.datasets[0].data = [infoCount, warningCount, errorCount];
-                severityChart.update();
+                chart.data.datasets[0].data = [info, warn, error];
+                chart.update();
             }
         });
     }
 
-    setInterval(fetchLogs, 2000);
-    fetchLogs(); // initial fetch
+    function toggleMode(){
+        document.body.classList.toggle("dark");
+    }
+
+    setInterval(fetchLogs, 3000);
+    fetchLogs();
 </script>
 
 </body>
 </html>
-

@@ -16,7 +16,7 @@ public class DashboardController {
     @Autowired
     private LogService service;
 
-    @GetMapping("/dashboard")
+    @GetMapping("/home")
     public String dashboard(@RequestParam(required = false) String keyword,
                             @RequestParam(required = false) String severity,
                             Model model) {
