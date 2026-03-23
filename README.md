@@ -1,67 +1,97 @@
-🌥️ Real-Time Cloud Log Monitoring System
+☁️ Cloud Log Monitoring System (CLMS)
 
-📖 Overview
-The Cloud Log Monitoring System is a web-based application designed to monitor, analyze, and visualize logs from cloud applications.  
-It helps developers and IT teams track events, detect errors, and troubleshoot issues efficiently, reducing debugging time and improving cloud system management.  
-
-This project is developed as part of our Final Year Project .
+📌 Overview
+This project is a lightweight Cloud Log Monitoring System built using Spring Boot.  
+It collects logs from different sources, stores them centrally, and provides real-time monitoring with alerts and visualization.
 
 
-✨ Features
-- Centralized Log Collection: Gather logs from multiple cloud sources in one place.
-- Real-time Monitoring: Track events and errors as they happen.
-- Search & Filter: Quickly locate specific logs using filters and search queries.
-- Visual Dashboard: User-friendly dashboards with charts and visualizations.
-- Lightweight & Easy Deployment: Simple setup with minimal dependencies.
+🚀 Features
+
+- ✅ Real-time log generation and ingestion
+- ✅ Centralized log storage (H2 Database)
+- ✅ Log severity classification (INFO, WARNING, ERROR)
+- ✅ REST API for log retrieval
+- ✅ Real-time dashboard (Thymeleaf UI)
+- ✅ Search and filtering functionality
+- ✅ Email alert system for ERROR logs
+- ✅ Lightweight and scalable design
 
 
-💻 Technology Stack
-- Backend: Node.js / Express  
-- Database: MongoDB / MySQL  
-- Frontend: HTML, CSS, JavaScript (or React/Angular)  
-- Version Control: Git & GitHub  
-- Deployment: Cloud platforms (AWS, Azure, Heroku)  
+🏗️ System Architecture
+
+Client → Log Generator → Spring Boot Server → Database → Dashboard UI
 
 
-⚡ Setup Instructions
+🧰 Technologies Used
+
+- Java 17+
+- Spring Boot
+- Spring Data JPA
+- H2 Database
+- Thymeleaf
+- Maven
+
+
+⚙️ How to Run
+
 1. Clone the repository:
 ```bash
-git clone https://github.com/spallavikadimi/CloudLogMonitoringSystem.git
-Navigate to the backend folder:
-cd backend
+git clone https://github.com/spallavikadimi/Cloud-log-monitoring-system.git
 
-Install dependencies:
-npm install
+2. Open in IntelliJ IDEA
 
-Start the application:
-npm start
+3. Run:
+ClmsApplication.java
 
-Open in browser:
-Go to http://localhost:3000 (or your configured port).
+4. Open browser:
 
-👩‍💻 Team Members
+👉 Logs API:
 
-Pallavi Kadimi -	Backend Developer- spallavikadimi@gmail.com
-Yaswitha Vadisela - Frontend Developer	
-Sushma V -Database & Deployment	
-Rohit Asi -Testing & Documentation	
+http://localhost:8080/logs
 
-🤝 Contribution
-We welcome contributions!
-Fork the repository
-Create a new branch: git checkout -b feature-name
-Commit your changes: git commit -m "Add feature"
-Push the branch: git push origin feature-name
-Open a pull request
 
-📜 License
-This project is licensed under the MIT License. You may use, modify, and distribute it for educational purposes.
+👉 Dashboard:
+
+http://localhost:8080/dashboard
+
+📊 Sample Output
+
+Logs are generated every few seconds:
+
+INFO → normal logs
+WARNING → potential issues
+ERROR → critical alerts
+
+🚨 Alerts
+
+Console alerts for ERROR logs
+Email alerts using SMTP (Gmail)
+
+📈 Future Enhancements
+
+Graph-based visualization
+Machine learning anomaly detection
+Cloud deployment (AWS)
+
 
 💡 Acknowledgements
 
 Our college and faculty for guidance and support.
-
 Open-source frameworks and libraries used in the project.
-
 Team members for collaboration and dedication.
 
+👩‍💻 Team Members
+
+- Pallavi  
+- Yaswitha  
+- Sushma  
+- Rohit  
+
+📜 License
+
+This project is developed for academic purposes as part of a final year B.Tech project.  
+It is free to use for learning and educational use only.
+
+© Copyright
+
+© 2026 Cloud Log Monitoring System Team. All rights reserved.
