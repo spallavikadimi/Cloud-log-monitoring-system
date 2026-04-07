@@ -150,40 +150,73 @@ function resetWorkspace(){
 
 <script>
     let allLogs=[], currentLogs=[], barChart, lineChart;
+
     function goToDashboard(){
       if(!username.value.trim() || !password.value.trim()) return alert('Please enter username and password');
       authPage.classList.add('hidden'); dashboardPage.classList.remove('hidden'); showSection('home'); fetchLogs();
     }
-    function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.add('hidden'));document.getElementById(id).classList.remove('hidden')}
-    function toggleUserMenu(){userMenu.classList.toggle('hidden')}
-    function logout(){dashboardPage.classList.add('hidden');authPage.classList.remove('hidden')}
+
+    function showSection(id){
+      document.querySelectorAll('.section').forEach(s=>s.classList.add('hidden'));
+      document.getElementById(id).classList.remove('hidden');
+    }
+
+    function toggleUserMenu(){
+      userMenu.classList.toggle('hidden');
+    }
+
+    function logout(){
+      dashboardPage.classList.add('hidden');
+      authPage.classList.remove('hidden');
+    }
 
     function fetchLogs(){
-     fetch('/logs').then(r=>r.json()).then(data=>{allLogs=data; updateDashboard(); updateCharts();}).catch(()=>{});
+      fetch('/api/logs').then(r=>r.json()).then(data=>{
+        allLogs=data;
+        updateDashboard();
+        updateCharts();
+      }).catch(()=>{});
     }
+
     function updateDashboard(){
-     totalLogs.textContent=allLogs.length;
-     errorLogs.textContent=allLogs.filter(l=>l.severity==='ERROR').length;
-     warningLogs.textContent=allLogs.filter(l=>l.severity==='WARNING').length;
+      totalLogs.textContent=allLogs.length;
+      errorLogs.textContent=allLogs.filter(l=>l.severity==='ERROR').length;
+      warningLogs.textContent=allLogs.filter(l=>l.severity==='WARNING').length;
     }
+
     function loadProjectLogs(project){
-     currentLogs=allLogs.filter(l=>(l.source||'').includes(project)); renderLogs(currentLogs);
+      currentLogs=allLogs.filter(l=>(l.source||'').includes(project));
+      renderLogs(currentLogs);
     }
+
     function filterLogs(){
-     const q=(searchInput.value||'').toLowerCase(); const s=severityInput.value;
-     const filtered=currentLogs.filter(l=>(!q||(l.message||'').toLowerCase().includes(q)) && (!s||l.severity===s));
-     renderLogs(filtered);
+      const q=(searchInput.value||'').toLowerCase();
+      const s=severityInput.value;
+      const filtered=currentLogs.filter(l=>(!q||(l.message||'').toLowerCase().includes(q)) && (!s||l.severity===s));
+      renderLogs(filtered);
     }
+
     function renderLogs(logs){
-     projectLogsBody.innerHTML = logs.length ? logs.map(l=>`<tr><td>${l.timestamp}</td><td>${l.source}</td><td>${l.message}</td><td>${l.severity}</td></tr>`).join('') : '<tr><td colspan="4">No matching logs found</td></tr>';
+      projectLogsBody.innerHTML = logs.length ? logs.map(l=>`<tr><td>${l.timestamp}</td><td>${l.source}</td><td>${l.message}</td><td>${l.severity}</td></tr>`).join('') : '<tr><td colspan="4">No matching logs found</td></tr>';
     }
+
     function updateCharts(){
-     const info=allLogs.filter(l=>l.severity==='INFO').length, warn=allLogs.filter(l=>l.severity==='WARNING').length, err=allLogs.filter(l=>l.severity==='ERROR').length;
-     if(barChart) barChart.destroy(); if(lineChart) lineChart.destroy();
-     barChart=new Chart(document.getElementById('logChart'),{type:'bar',data:{labels:['INFO','WARNING','ERROR'],datasets:[{data:[info,warn,err],backgroundColor:['#3b82f6','#f59e0b','#ef4444']}]}});
-     lineChart=new Chart(document.getElementById('trendChart'),{type:'line',data:{labels:allLogs.slice(0,5).map(l=>l.timestamp),datasets:[{label:'Logs',data:allLogs.slice(0,5).map((_,i)=>i+1),borderColor:'#06b6d4'}]}});
+      const info=allLogs.filter(l=>l.severity==='INFO').length,
+            warn=allLogs.filter(l=>l.severity==='WARNING').length,
+            err=allLogs.filter(l=>l.severity==='ERROR').length;
+      if(barChart) barChart.destroy();
+      if(lineChart) lineChart.destroy();
+      barChart=new Chart(document.getElementById('logChart'),{
+        type:'bar',
+        data:{labels:['INFO','WARNING','ERROR'],datasets:[{data:[info,warn,err],backgroundColor:['#3b82f6','#f59e0b','#ef4444']}]}
+      });
+      lineChart=new Chart(document.getElementById('trendChart'),{
+        type:'line',
+        data:{labels:allLogs.slice(0,5).map(l=>l.timestamp),datasets:[{label:'Logs',data:allLogs.slice(0,5).map((_,i)=>i+1),borderColor:'#06b6d4'}]}
+      });
     }
 </script>
+
 <button onclick="alert('Contact: spallavikadimi@spallavikadimi')" style="position:fixed;bottom:25px;right:25px;width:64px;height:64px;border-radius:50%;background:linear-gradient(90deg,#06b6d4,#3b82f6);color:white;font-size:26px">✉</button>
 </body>
 </html>

@@ -9,16 +9,11 @@ import org.springframework.stereotype.Controller;
 import java.util.List;
 
 @Controller
+@RequestMapping("/api")
 public class LogController {
 
     @Autowired
     private LogService service;
-
-    // ✅ HOME PAGE
-    @GetMapping("/")
-    public String home() {
-        return "dashboard";
-    }
 
     // ✅ API - GET ALL LOGS
     @GetMapping("/logs")

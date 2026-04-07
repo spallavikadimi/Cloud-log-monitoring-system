@@ -8,6 +8,6 @@ public class HomeController {
 
     @GetMapping("/")
     public String home() {
-        return "Cloud Log Monitoring System is running successfully";
+        return "index";
     }
 }
