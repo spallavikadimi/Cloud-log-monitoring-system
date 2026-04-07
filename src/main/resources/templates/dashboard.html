@@ -1,254 +1,189 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-
+<html lang="en">
 <head>
-    <title>SplunkLite - Real-Time Log Monitoring</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SplunkLite Enterprise Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js">function toggleTheme(){
+  document.body.style.background = document.body.style.background.includes('255')
+    ? 'linear-gradient(135deg,#0f172a,#1e293b)'
+    : 'linear-gradient(135deg,#dbeafe,#e0e7ff)';
+  document.getElementById('settingsStatus').textContent='Theme updated successfully';
+}
 
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- jQuery -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+function toggleNotifications(){
+  document.getElementById('settingsStatus').textContent='Notifications preference saved';
+}
 
+function editProfile(){
+  const name = prompt('Enter display name', 'Pallavi');
+  document.getElementById('settingsStatus').textContent = name ? 'Profile updated for ' + name : 'Profile update cancelled';
+}
+
+function resetWorkspace(){
+  const s = document.getElementById('searchInput');
+  const sev = document.getElementById('severityInput');
+  if(s) s.value='';
+  if(sev) sev.value='';
+  document.getElementById('settingsStatus').textContent='Workspace filters reset';
+}
+
+function toggleThe
+  document.body.style.background = document.body.style.background.includes('255')
+    ? 'linear-gradient(135deg,#0f172a,#1e293b)'
+    : 'linear-gradient(135deg,#dbeafe,#e0e7ff)';
+  document.getElementById('settingsStatus').textContent='Theme updated successfully';
+}
+function toggleNotifications(){
+  document.getElementById('settingsStatus').textContent='Notifications preference saved';
+}
+function editProfile(){
+  const name = prompt('Enter display name', 'Pallavi');
+  document.getElementById('settingsStatus').textContent = name ? 'Profile updated for '+name : 'Profile update cancelled';
+}
+function resetWorkspace(){
+  document.getElementById('searchInput').value='';
+  document.getElementById('severityInput').value='';
+  document.getElementById('settingsStatus').textContent='Workspace filters reset';
+}
+    </script>
     <style>
-        body {
-            font-family: 'Segoe UI', sans-serif;
-            margin: 0;
-            background: linear-gradient(to right, #e3f2fd, #fce4ec);
-            transition: 0.3s;
-        }
-
-        body.dark {
-            background: #121212;
-            color: white;
-        }
-
-        header {
-            display: flex;
-            justify-content: space-between;
-            padding: 20px 40px;
-            align-items: center;
-        }
-
-        h1 {
-            margin: 0;
-            color: #007bff;
-        }
-
-        body.dark h1 {
-            color: #90caf9;
-        }
-
-        .mode-btn {
-            padding: 8px 15px;
-            border: none;
-            background: #333;
-            color: white;
-            border-radius: 20px;
-            cursor: pointer;
-        }
-
-        form {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        input, select {
-            padding: 10px;
-            border-radius: 25px;
-            border: none;
-            margin: 5px;
-            outline: none;
-            width: 200px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-        }
-
-        button.filter-btn {
-            padding: 10px 20px;
-            border-radius: 25px;
-            border: none;
-            background: #007bff;
-            color: white;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        button.filter-btn:hover {
-            background: #0056b3;
-        }
-
-        table {
-            width: 85%;
-            margin: auto;
-            border-collapse: separate;
-            border-spacing: 0 10px;
-        }
-
-        th {
-            background: #007bff;
-            color: white;
-            padding: 12px;
-        }
-
-        tbody tr {
-            background: linear-gradient(135deg, #e3f2fd, #fce4ec);
-            transition: 0.3s;
-            border-radius: 10px;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-        }
-
-        tbody tr:hover {
-            background: linear-gradient(135deg, #bbdefb, #f8bbd0);
-            transform: scale(1.01);
-        }
-
-        td {
-            padding: 12px;
-            user-select: text; /* allows copy */
-        }
-
-        body.dark tbody tr {
-            background: #1e1e1e;
-        }
-
-        #chart-container {
-            width: 70%;
-            margin: 40px auto;
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-        }
-
-        body.dark #chart-container {
-            background: #1e1e1e;
-        }
-
-        footer {
-            text-align: center;
-            padding: 15px;
-            font-size: 14px;
-            opacity: 0.7;
-        }
-
-        .no-data {
-            text-align: center;
-            font-size: 18px;
-            color: gray;
-            animation: fade 1s infinite alternate;
-        }
-
-        @keyframes fade {
-            from { opacity: 0.5; }
-            to { opacity: 1; }
-        }
-
+        *{box-sizing:border-box} body{margin:0;font-family:'Segoe UI',sans-serif;background:linear-gradient(135deg,#0f172a,#1e293b);color:#fff} .hidden{display:none}
+        .auth-wrapper{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:30px}
+        .auth-card{width:900px;display:grid;grid-template-columns:1fr 1fr;background:rgba(255,255,255,.08);backdrop-filter:blur(16px);border-radius:24px;overflow:hidden}
+        .brand-panel,.auth-form{padding:50px}.brand-panel{background:linear-gradient(135deg,rgba(59,130,246,.3),rgba(168,85,247,.25))}
+        input,select{padding:12px;border:none;border-radius:10px} .auth-form input{width:100%;margin:10px 0}
+        button{cursor:pointer;border:none;border-radius:14px;transition:.3s}.submit-btn,.nav-btn{padding:14px 18px;color:#fff}.submit-btn{width:100%;background:linear-gradient(90deg,#3b82f6,#8b5cf6)}
+        .dashboard{display:flex;min-height:100vh}.sidebar{width:250px;background:rgba(255,255,255,.06);padding:25px}.nav-btn{width:100%;margin:10px 0;background:rgba(255,255,255,.08);text-align:left}.nav-btn:hover{background:#3b82f6}
+        .main-content{flex:1;padding:30px}.cards,.projects-grid{display:grid;gap:20px}.cards{grid-template-columns:repeat(4,1fr)}.projects-grid{grid-template-columns:repeat(3,1fr)}
+        .card,.project-card,.panel{background:rgba(255,255,255,.08);padding:22px;border-radius:18px}.project-card{cursor:pointer}.project-card:hover{transform:translateY(-4px)}
+        table{width:100%;border-collapse:separate;border-spacing:0 10px;margin-top:10px} th,td{padding:14px;text-align:left} tbody tr{background:rgba(255,255,255,.06)}
     </style>
 </head>
-
 <body>
-
-<header>
-    <div>
-        <h1>SplunkLite</h1>
-        <p>Real-Time Log Monitoring Made Simple</p>
+<div id="authPage" class="auth-wrapper">
+    <div class="auth-card">
+        <div class="brand-panel">
+            <h1>SplunkLite</h1>
+            <p style="font-size:18px;line-height:1.8">Monitor cloud applications, track live events, and visualize project health in one intelligent workspace.</p>
+        </div>
+        <div class="auth-form">
+            <h2>Login</h2>
+            <input id="username" type="text" placeholder="Email or Username">
+            <input id="password" type="password" placeholder="Password">
+            <button class="submit-btn" onclick="goToDashboard()">Continue</button>
+        </div>
     </div>
-    <button class="mode-btn" onclick="toggleMode()">Mode</button>
-</header>
-
-<!-- FILTER -->
-<form onsubmit="return false;">
-    <input type="text" id="search" placeholder="Search logs...">
-    <select id="severity">
-        <option value="">All</option>
-        <option value="INFO">INFO</option>
-        <option value="WARNING">WARNING</option>
-        <option value="ERROR">ERROR</option>
-    </select>
-    <button class="filter-btn" onclick="fetchLogs()">Filter</button>
-</form>
-
-<!-- TABLE -->
-<table>
-    <thead>
-    <tr>
-        <th>Time</th>
-        <th>Source</th>
-        <th>Message</th>
-        <th>Severity</th>
-    </tr>
-    </thead>
-    <tbody id="logTable"></tbody>
-</table>
-
-<!-- CHART -->
-<div id="chart-container">
-    <canvas id="chart"></canvas>
 </div>
 
-<footer>
-    © 2026 Log Monitoring System
-</footer>
+<div id="dashboardPage" class="dashboard hidden">
+    <div class="sidebar">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+            <h2>SplunkLite</h2>
+            <div style="position:relative">
+                <button onclick="toggleUserMenu()" style="width:42px;height:42px;border-radius:50%;background:#3b82f6;color:#fff">P</button>
+                <div id="userMenu" class="hidden" style="position:absolute;right:0;top:50px;background:#1e293b;padding:10px;border-radius:12px">
+                    <button class="nav-btn" onclick="showSection('settings')">Profile</button>
+                    <button class="nav-btn" onclick="logout()">Logout</button>
+                </div>
+            </div>
+        </div>
+        <button class="nav-btn" onclick="showSection('home')">🏠 Home</button>
+        <button class="nav-btn" onclick="showSection('projects')">📂 Projects</button>
+        <button class="nav-btn" onclick="showSection('analytics')">📊 Analytics</button>
+        <button class="nav-btn" onclick="showSection('alerts')">⚠ Alerts</button>
+        <button class="nav-btn" onclick="showSection('settings')">⚙ Settings</button>
+    </div>
+
+    <div class="main-content">
+        <div id="home" class="section">
+            <h1>Dashboard Home</h1>
+            <div class="cards">
+                <div class="card"><h3>Total Logs</h3><h2 id="totalLogs">0</h2></div>
+                <div class="card"><h3>Errors</h3><h2 id="errorLogs">0</h2></div>
+                <div class="card"><h3>Warnings</h3><h2 id="warningLogs">0</h2></div>
+                <div class="card"><h3>Projects</h3><h2>3</h2></div>
+            </div>
+        </div>
+
+        <div id="projects" class="section hidden">
+            <h1>Projects</h1>
+            <div class="projects-grid">
+                <div class="project-card" onclick="loadProjectLogs('Cloud')">☁️ Cloud Server Logs</div>
+                <div class="project-card" onclick="loadProjectLogs('API')">🔌 API Monitoring</div>
+                <div class="project-card" onclick="loadProjectLogs('Security')">🔐 Security Events</div>
+            </div>
+            <div class="panel" style="margin-top:20px;">
+                <h3>Live Project Logs</h3>
+                <div style="display:flex;gap:10px;flex-wrap:wrap">
+                    <input id="searchInput" placeholder="Search logs..." oninput="filterLogs()">
+                    <select id="severityInput" onchange="filterLogs()">
+                        <option value="">All</option><option>INFO</option><option>WARNING</option><option>ERROR</option>
+                    </select>
+                </div>
+                <table><thead><tr><th>Time</th><th>Source</th><th>Message</th><th>Severity</th></tr></thead><tbody id="projectLogsBody"><tr><td colspan="4">Choose a project</td></tr></tbody></table>
+            </div>
+        </div>
+
+        <div id="analytics" class="section hidden">
+            <h1>Analytics</h1>
+            <div class="panel"><canvas id="logChart"></canvas></div>
+            <div class="panel" style="margin-top:20px"><canvas id="trendChart"></canvas></div>
+        </div>
+
+        <div id="alerts" class="section hidden"><h1>Alerts</h1><div class="panel">⚠ Critical issues automatically detected from ERROR logs.</div></div>
+        <div id="settings" class="section hidden">
+            <h1>Settings</h1>
+            <div class="panel">
+                <h3>Workspace Controls</h3>
+                <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:18px;">
+                    <button class="nav-btn" onclick="toggleTheme()">🎨 Toggle Theme</button>
+                    <button class="nav-btn" onclick="toggleNotifications()">🔔 Notifications</button>
+                    <button class="nav-btn" onclick="editProfile()">👤 Edit Profile</button>
+                    <button class="nav-btn" onclick="resetWorkspace()">♻ Reset Workspace</button>
+                </div>
+                <div id="settingsStatus" style="margin-top:18px;padding:14px;border-radius:12px;background:rgba(255,255,255,.06);opacity:.9;">Choose an option to update your workspace preferences.</div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script>
-    let chart;
-
-    function fetchLogs() {
-        let keyword = $("#search").val().toLowerCase();
-        let severity = $("#severity").val();
-
-        $.get("/logs", function(data) {
-
-            let filtered = data.filter(log =>
-                (!keyword || log.message.toLowerCase().includes(keyword)) &&
-                (!severity || log.severity === severity)
-            );
-
-            let rows = "";
-
-            if(filtered.length === 0){
-                rows = `<tr><td colspan="4" class="no-data">No logs found 😔</td></tr>`;
-            } else {
-                filtered.forEach(log => {
-                    rows += `
-                        <tr>
-                            <td>${log.timestamp}</td>
-                            <td>${log.source}</td>
-                            <td>${log.message}</td>
-                            <td>${log.severity}</td>
-                        </tr>`;
-                });
-            }
-
-            $("#logTable").html(rows);
-
-            let info = filtered.filter(l => l.severity === "INFO").length;
-            let warn = filtered.filter(l => l.severity === "WARNING").length;
-            let error = filtered.filter(l => l.severity === "ERROR").length;
-
-            if(!chart){
-                chart = new Chart(document.getElementById("chart"), {
-                    type: "bar",
-                    data: {
-                        labels: ["INFO","WARNING","ERROR"],
-                        datasets: [{
-                            data: [info, warn, error],
-                            backgroundColor: ["#4caf50","#ff9800","#f44336"]
-                        }]
-                    }
-                });
-            } else {
-                chart.data.datasets[0].data = [info, warn, error];
-                chart.update();
-            }
-        });
+    let allLogs=[], currentLogs=[], barChart, lineChart;
+    function goToDashboard(){
+      if(!username.value.trim() || !password.value.trim()) return alert('Please enter username and password');
+      authPage.classList.add('hidden'); dashboardPage.classList.remove('hidden'); showSection('home'); fetchLogs();
     }
+    function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.add('hidden'));document.getElementById(id).classList.remove('hidden')}
+    function toggleUserMenu(){userMenu.classList.toggle('hidden')}
+    function logout(){dashboardPage.classList.add('hidden');authPage.classList.remove('hidden')}
 
-    function toggleMode(){
-        document.body.classList.toggle("dark");
+    function fetchLogs(){
+     fetch('/logs').then(r=>r.json()).then(data=>{allLogs=data; updateDashboard(); updateCharts();}).catch(()=>{});
     }
-
-    setInterval(fetchLogs, 3000);
-    fetchLogs();
+    function updateDashboard(){
+     totalLogs.textContent=allLogs.length;
+     errorLogs.textContent=allLogs.filter(l=>l.severity==='ERROR').length;
+     warningLogs.textContent=allLogs.filter(l=>l.severity==='WARNING').length;
+    }
+    function loadProjectLogs(project){
+     currentLogs=allLogs.filter(l=>(l.source||'').includes(project)); renderLogs(currentLogs);
+    }
+    function filterLogs(){
+     const q=(searchInput.value||'').toLowerCase(); const s=severityInput.value;
+     const filtered=currentLogs.filter(l=>(!q||(l.message||'').toLowerCase().includes(q)) && (!s||l.severity===s));
+     renderLogs(filtered);
+    }
+    function renderLogs(logs){
+     projectLogsBody.innerHTML = logs.length ? logs.map(l=>`<tr><td>${l.timestamp}</td><td>${l.source}</td><td>${l.message}</td><td>${l.severity}</td></tr>`).join('') : '<tr><td colspan="4">No matching logs found</td></tr>';
+    }
+    function updateCharts(){
+     const info=allLogs.filter(l=>l.severity==='INFO').length, warn=allLogs.filter(l=>l.severity==='WARNING').length, err=allLogs.filter(l=>l.severity==='ERROR').length;
+     if(barChart) barChart.destroy(); if(lineChart) lineChart.destroy();
+     barChart=new Chart(document.getElementById('logChart'),{type:'bar',data:{labels:['INFO','WARNING','ERROR'],datasets:[{data:[info,warn,err],backgroundColor:['#3b82f6','#f59e0b','#ef4444']}]}});
+     lineChart=new Chart(document.getElementById('trendChart'),{type:'line',data:{labels:allLogs.slice(0,5).map(l=>l.timestamp),datasets:[{label:'Logs',data:allLogs.slice(0,5).map((_,i)=>i+1),borderColor:'#06b6d4'}]}});
+    }
 </script>
-
+<button onclick="alert('Contact: spallavikadimi@spallavikadimi')" style="position:fixed;bottom:25px;right:25px;width:64px;height:64px;border-radius:50%;background:linear-gradient(90deg,#06b6d4,#3b82f6);color:white;font-size:26px">✉</button>
 </body>
 </html>
