@@ -4,90 +4,122 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>SplunkLite Enterprise Dashboard</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js">function toggleTheme(){
-  document.body.style.background = document.body.style.background.includes('255')
-    ? 'linear-gradient(135deg,#0f172a,#1e293b)'
-    : 'linear-gradient(135deg,#dbeafe,#e0e7ff)';
-  document.getElementById('settingsStatus').textContent='Theme updated successfully';
-}
-
-function toggleNotifications(){
-  document.getElementById('settingsStatus').textContent='Notifications preference saved';
-}
-
-function editProfile(){
-  const name = prompt('Enter display name', 'Pallavi');
-  document.getElementById('settingsStatus').textContent = name ? 'Profile updated for ' + name : 'Profile update cancelled';
-}
-
-function resetWorkspace(){
-  const s = document.getElementById('searchInput');
-  const sev = document.getElementById('severityInput');
-  if(s) s.value='';
-  if(sev) sev.value='';
-  document.getElementById('settingsStatus').textContent='Workspace filters reset';
-}
-
-function toggleThe
-  document.body.style.background = document.body.style.background.includes('255')
-    ? 'linear-gradient(135deg,#0f172a,#1e293b)'
-    : 'linear-gradient(135deg,#dbeafe,#e0e7ff)';
-  document.getElementById('settingsStatus').textContent='Theme updated successfully';
-}
-function toggleNotifications(){
-  document.getElementById('settingsStatus').textContent='Notifications preference saved';
-}
-function editProfile(){
-  const name = prompt('Enter display name', 'Pallavi');
-  document.getElementById('settingsStatus').textContent = name ? 'Profile updated for '+name : 'Profile update cancelled';
-}
-function resetWorkspace(){
-  document.getElementById('searchInput').value='';
-  document.getElementById('severityInput').value='';
-  document.getElementById('settingsStatus').textContent='Workspace filters reset';
-}
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        *{box-sizing:border-box} body{margin:0;font-family:'Segoe UI',sans-serif;background:linear-gradient(135deg,#0f172a,#1e293b);color:#fff} .hidden{display:none}
-        .auth-wrapper{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:30px}
-        .auth-card{width:900px;display:grid;grid-template-columns:1fr 1fr;background:rgba(255,255,255,.08);backdrop-filter:blur(16px);border-radius:24px;overflow:hidden}
-        .brand-panel,.auth-form{padding:50px}.brand-panel{background:linear-gradient(135deg,rgba(59,130,246,.3),rgba(168,85,247,.25))}
-        input,select{padding:12px;border:none;border-radius:10px} .auth-form input{width:100%;margin:10px 0}
-        button{cursor:pointer;border:none;border-radius:14px;transition:.3s}.submit-btn,.nav-btn{padding:14px 18px;color:#fff}.submit-btn{width:100%;background:linear-gradient(90deg,#3b82f6,#8b5cf6)}
-        .dashboard{display:flex;min-height:100vh}.sidebar{width:250px;background:rgba(255,255,255,.06);padding:25px}.nav-btn{width:100%;margin:10px 0;background:rgba(255,255,255,.08);text-align:left}.nav-btn:hover{background:#3b82f6}
-        .main-content{flex:1;padding:30px}.cards,.projects-grid{display:grid;gap:20px}.cards{grid-template-columns:repeat(4,1fr)}.projects-grid{grid-template-columns:repeat(3,1fr)}
-        .card,.project-card,.panel{background:rgba(255,255,255,.08);padding:22px;border-radius:18px}.project-card{cursor:pointer}.project-card:hover{transform:translateY(-4px)}
-        table{width:100%;border-collapse:separate;border-spacing:0 10px;margin-top:10px} th,td{padding:14px;text-align:left} tbody tr{background:rgba(255,255,255,.06)}
+        * { box-sizing: border-box; }
+        body {
+          transition: background 0.3s ease, color 0.3s ease;
+          margin: 0;
+          font-family: 'Segoe UI', sans-serif;
+          background: linear-gradient(135deg, #0f172a, #1e293b);
+          color: white;
+        }
+        .dashboard { display: flex; min-height: 100vh; }
+        .hidden { display: none; }
+        .sidebar {
+          width: 250px;
+          background: rgba(255,255,255,0.06);
+          padding: 25px;
+        }
+        .nav-btn {
+          width: 100%;
+          margin: 10px 0;
+          padding: 14px;
+          border: none;
+          border-radius: 12px;
+          background: rgba(255,255,255,0.08);
+          color: white;
+          text-align: left;
+          cursor: pointer;
+        }
+        .nav-btn:hover { background: #3b82f6; }
+        .main-content { flex: 1; padding: 30px; }
+        .cards {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 20px;
+        }
+        .card, .panel, .project-card {
+          background: rgba(255,255,255,0.08);
+          padding: 22px;
+          border-radius: 18px;
+        }
+        .projects-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 20px;
+        }
+        .project-card { cursor: pointer; }
+        .project-card:hover { transform: translateY(-4px); }
+        input, select {
+          padding: 12px;
+          border: none;
+          border-radius: 10px;
+        }
+        table {
+          width: 100%;
+          border-collapse: separate;
+          border-spacing: 0 10px;
+          margin-top: 10px;
+        }
+        th, td { padding: 14px; text-align: left; }
+        tbody tr { background: rgba(255,255,255,0.06); }
+          .theme-switch {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          margin-top: 10px;
+        }
+        .switch {
+          position: relative;
+          width: 56px;
+          height: 30px;
+          background: #334155;
+          border-radius: 999px;
+          cursor: pointer;
+          transition: background 0.3s ease;
+        }
+        .switch::after {
+          content: '';
+          position: absolute;
+          top: 3px;
+          left: 3px;
+          width: 24px;
+          height: 24px;
+          border-radius: 50%;
+          background: white;
+          transition: transform 0.3s ease;
+        }
+        body.light-mode {
+          background: linear-gradient(135deg, #f8fafc, #ede9fe);
+          color: #312e81;
+        }
+        body.light-mode .card,
+        body.light-mode .panel,
+        body.light-mode .project-card,
+        body.light-mode .sidebar {
+          background: rgba(255, 255, 255, 0.92);
+          color: #312e81;
+          border: 1px solid rgba(196, 181, 253, 0.5);
+          box-shadow: 0 8px 24px rgba(139, 92, 246, 0.08);
+        }
+        body.light-mode .nav-btn {
+          background: #ddd6fe;
+          color: #312e81;
+          font-weight: 600;
+        }
+        body.light-mode .switch {
+          background: #a78bfa;
+        }
+        body.light-mode .switch::after {
+          transform: translateX(26px);
+        }
     </style>
 </head>
 <body>
-<div id="authPage" class="auth-wrapper">
-    <div class="auth-card">
-        <div class="brand-panel">
-            <h1>SplunkLite</h1>
-            <p style="font-size:18px;line-height:1.8">Monitor cloud applications, track live events, and visualize project health in one intelligent workspace.</p>
-        </div>
-        <div class="auth-form">
-            <h2>Login</h2>
-            <input id="username" type="text" placeholder="Email or Username">
-            <input id="password" type="password" placeholder="Password">
-            <button class="submit-btn" onclick="goToDashboard()">Continue</button>
-        </div>
-    </div>
-</div>
-
-<div id="dashboardPage" class="dashboard hidden">
+<div class="dashboard">
     <div class="sidebar">
-        <div style="display:flex;justify-content:space-between;align-items:center">
-            <h2>SplunkLite</h2>
-            <div style="position:relative">
-                <button onclick="toggleUserMenu()" style="width:42px;height:42px;border-radius:50%;background:#3b82f6;color:#fff">P</button>
-                <div id="userMenu" class="hidden" style="position:absolute;right:0;top:50px;background:#1e293b;padding:10px;border-radius:12px">
-                    <button class="nav-btn" onclick="showSection('settings')">Profile</button>
-                    <button class="nav-btn" onclick="logout()">Logout</button>
-                </div>
-            </div>
-        </div>
+        <h2>SplunkLite</h2>
         <button class="nav-btn" onclick="showSection('home')">🏠 Home</button>
         <button class="nav-btn" onclick="showSection('projects')">📂 Projects</button>
         <button class="nav-btn" onclick="showSection('analytics')">📊 Analytics</button>
@@ -118,10 +150,16 @@ function resetWorkspace(){
                 <div style="display:flex;gap:10px;flex-wrap:wrap">
                     <input id="searchInput" placeholder="Search logs..." oninput="filterLogs()">
                     <select id="severityInput" onchange="filterLogs()">
-                        <option value="">All</option><option>INFO</option><option>WARNING</option><option>ERROR</option>
+                        <option value="">All</option>
+                        <option>INFO</option>
+                        <option>WARNING</option>
+                        <option>ERROR</option>
                     </select>
                 </div>
-                <table><thead><tr><th>Time</th><th>Source</th><th>Message</th><th>Severity</th></tr></thead><tbody id="projectLogsBody"><tr><td colspan="4">Choose a project</td></tr></tbody></table>
+                <table>
+                    <thead><tr><th>Time</th><th>Source</th><th>Message</th><th>Severity</th></tr></thead>
+                    <tbody id="projectLogsBody"><tr><td colspan="4">Choose a project</td></tr></tbody>
+                </table>
             </div>
         </div>
 
@@ -131,92 +169,104 @@ function resetWorkspace(){
             <div class="panel" style="margin-top:20px"><canvas id="trendChart"></canvas></div>
         </div>
 
-        <div id="alerts" class="section hidden"><h1>Alerts</h1><div class="panel">⚠ Critical issues automatically detected from ERROR logs.</div></div>
+        <div id="alerts" class="section hidden">
+            <h1>Alerts</h1>
+            <div class="panel">⚠ Critical issues automatically detected from ERROR logs.</div>
+        </div>
+
         <div id="settings" class="section hidden">
             <h1>Settings</h1>
             <div class="panel">
-                <h3>Workspace Controls</h3>
-                <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:18px;">
-                    <button class="nav-btn" onclick="toggleTheme()">🎨 Toggle Theme</button>
-                    <button class="nav-btn" onclick="toggleNotifications()">🔔 Notifications</button>
-                    <button class="nav-btn" onclick="editProfile()">👤 Edit Profile</button>
-                    <button class="nav-btn" onclick="resetWorkspace()">♻ Reset Workspace</button>
+                <div class="theme-switch">
+                    <span>🌙 / ☀ Theme</span>
+                    <div class="switch" onclick="toggleTheme()"></div>
                 </div>
-                <div id="settingsStatus" style="margin-top:18px;padding:14px;border-radius:12px;background:rgba(255,255,255,.06);opacity:.9;">Choose an option to update your workspace preferences.</div>
             </div>
         </div>
     </div>
 </div>
 
 <script>
-    let allLogs=[], currentLogs=[], barChart, lineChart;
+    let allLogs = [], currentLogs = [], barChart, lineChart;
 
-    function goToDashboard(){
-      if(!username.value.trim() || !password.value.trim()) return alert('Please enter username and password');
-      authPage.classList.add('hidden'); dashboardPage.classList.remove('hidden'); showSection('home'); fetchLogs();
-    }
-
-    function showSection(id){
-      document.querySelectorAll('.section').forEach(s=>s.classList.add('hidden'));
+    function showSection(id) {
+      document.querySelectorAll('.section').forEach(s => s.classList.add('hidden'));
       document.getElementById(id).classList.remove('hidden');
     }
 
-    function toggleUserMenu(){
-      userMenu.classList.toggle('hidden');
+    function fetchLogs() {
+  fetch('/api/logs')
+    .then(r => r.json())
+    .then(data => {
+      allLogs = data;
+      currentLogs = allLogs;
+      updateDashboard();
+      updateCharts();
+      renderLogs(currentLogs);
+    })
+    .catch(err => console.log('Error fetching logs:', err));
+}
+
+
+    function updateDashboard() {
+      document.getElementById('totalLogs').textContent = allLogs.length;
+      document.getElementById('errorLogs').textContent = allLogs.filter(l => l.severity === 'ERROR').length;
+      document.getElementById('warningLogs').textContent = allLogs.filter(l => l.severity === 'WARNING').length;
     }
 
-    function logout(){
-      dashboardPage.classList.add('hidden');
-      authPage.classList.remove('hidden');
-    }
-
-    function fetchLogs(){
-      fetch('/api/logs').then(r=>r.json()).then(data=>{
-        allLogs=data;
-        updateDashboard();
-        updateCharts();
-      }).catch(()=>{});
-    }
-
-    function updateDashboard(){
-      totalLogs.textContent=allLogs.length;
-      errorLogs.textContent=allLogs.filter(l=>l.severity==='ERROR').length;
-      warningLogs.textContent=allLogs.filter(l=>l.severity==='WARNING').length;
-    }
-
-    function loadProjectLogs(project){
-      currentLogs=allLogs.filter(l=>(l.source||'').includes(project));
+    function loadProjectLogs(project) {
+      currentLogs = allLogs.filter(l => (l.source || '').includes(project));
       renderLogs(currentLogs);
     }
 
-    function filterLogs(){
-      const q=(searchInput.value||'').toLowerCase();
-      const s=severityInput.value;
-      const filtered=currentLogs.filter(l=>(!q||(l.message||'').toLowerCase().includes(q)) && (!s||l.severity===s));
+    function filterLogs() {
+      const q = document.getElementById('searchInput').value.toLowerCase();
+      const s = document.getElementById('severityInput').value;
+      const filtered = currentLogs.filter(l =>
+        (!q || (l.message || '').toLowerCase().includes(q)) &&
+        (!s || l.severity === s)
+      );
       renderLogs(filtered);
     }
 
-    function renderLogs(logs){
-      projectLogsBody.innerHTML = logs.length ? logs.map(l=>`<tr><td>${l.timestamp}</td><td>${l.source}</td><td>${l.message}</td><td>${l.severity}</td></tr>`).join('') : '<tr><td colspan="4">No matching logs found</td></tr>';
+    function renderLogs(logs) {
+      const body = document.getElementById('projectLogsBody');
+      body.innerHTML = logs.length
+        ? logs.map(l => `<tr><td>${l.timestamp}</td><td>${l.source}</td><td>${l.message}</td><td>${l.severity}</td></tr>`).join('')
+        : '<tr><td colspan="4">No matching logs found</td></tr>';
     }
 
-    function updateCharts(){
-      const info=allLogs.filter(l=>l.severity==='INFO').length,
-            warn=allLogs.filter(l=>l.severity==='WARNING').length,
-            err=allLogs.filter(l=>l.severity==='ERROR').length;
-      if(barChart) barChart.destroy();
-      if(lineChart) lineChart.destroy();
-      barChart=new Chart(document.getElementById('logChart'),{
-        type:'bar',
-        data:{labels:['INFO','WARNING','ERROR'],datasets:[{data:[info,warn,err],backgroundColor:['#3b82f6','#f59e0b','#ef4444']}]}
+    function updateCharts() {
+      const info = allLogs.filter(l => l.severity === 'INFO').length;
+      const warn = allLogs.filter(l => l.severity === 'WARNING').length;
+      const err = allLogs.filter(l => l.severity === 'ERROR').length;
+
+      if (barChart) barChart.destroy();
+      if (lineChart) lineChart.destroy();
+
+      barChart = new Chart(document.getElementById('logChart'), {
+        type: 'bar',
+        data: {
+          labels: ['INFO', 'WARNING', 'ERROR'],
+          datasets: [{ data: [info, warn, err], backgroundColor: ['#3b82f6', '#f59e0b', '#ef4444'] }]
+        }
       });
-      lineChart=new Chart(document.getElementById('trendChart'),{
-        type:'line',
-        data:{labels:allLogs.slice(0,5).map(l=>l.timestamp),datasets:[{label:'Logs',data:allLogs.slice(0,5).map((_,i)=>i+1),borderColor:'#06b6d4'}]}
+
+      lineChart = new Chart(document.getElementById('trendChart'), {
+        type: 'line',
+        data: {
+          labels: allLogs.slice(0, 5).map(l => l.timestamp),
+          datasets: [{ label: 'Logs', data: allLogs.slice(0, 5).map((_, i) => i + 1), borderColor: '#06b6d4' }]
+        }
       });
     }
+
+    function toggleTheme() {
+      document.body.classList.toggle('light-mode');
+    }
+
+    fetchLogs();
+    setInterval(fetchLogs, 5000);
 </script>
-
-<button onclick="alert('Contact: spallavikadimi@spallavikadimi')" style="position:fixed;bottom:25px;right:25px;width:64px;height:64px;border-radius:50%;background:linear-gradient(90deg,#06b6d4,#3b82f6);color:white;font-size:26px">✉</button>
 </body>
 </html>
